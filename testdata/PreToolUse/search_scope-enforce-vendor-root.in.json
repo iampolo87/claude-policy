@@ -1,0 +1,1 @@
+{"session_id":"s1","cwd":"{{TESTDATA}}/PreToolUse/search_scope-repo","permission_mode":"auto","hook_event_name":"PreToolUse","tool_name":"Bash","tool_input":{"command":"grep -rn needle . vendor"},"tool_use_id":"toolu_01"}

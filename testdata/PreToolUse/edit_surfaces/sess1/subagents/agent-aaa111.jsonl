@@ -1,0 +1,2 @@
+{"type":"user","agentId":"aaa111","message":{"role":"user","content":"Do the thing.\n\n## Allowed edit surfaces\n- internal/rules/edit_surfaces.go\n- `testdata/PreToolUse/edit_surfaces-*`\n\n## Other\n- not/a/surface.go\n"}}
+{"type":"assistant"}

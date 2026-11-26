@@ -1,0 +1,32 @@
+{
+  "session_id": "00000000-0000-4000-8000-0000000000a2",
+  "transcript_path": "/work/user/.claude/projects/-work-user-projects-claude-policy/00000000-0000-4000-8000-0000000000a2.jsonl",
+  "cwd": "/work/user/projects/claude-policy",
+  "scratchpad_dir": "/tmp/claude-1000/-work-user-projects-claude-policy/00000000-0000-4000-8000-0000000000a2/scratchpad",
+  "prompt_id": "00000000-0000-4000-8000-0000000000a5",
+  "permission_mode": "auto",
+  "effort": {
+    "level": "high"
+  },
+  "hook_event_name": "PostToolUse",
+  "tool_name": "mcp__plugin_claude-mem_mcp-search__work_state_write",
+  "tool_input": {
+    "list": "release",
+    "fields": {
+      "next_step": "write the summary",
+      "baseline": "abc1234"
+    }
+  },
+  "tool_response": [
+    {
+      "type": "text",
+      "text": "Saved to \"release\" in claude-policy. Still open in it:\n- release: status=doing, baseline=abc1234, next_step=write the summary"
+    }
+  ],
+  "tool_use_id": "toolu_01Fixture000000000000007",
+  "duration_ms": 10,
+  "mcp_server": {
+    "name": "plugin:claude-mem:mcp-search",
+    "source": "plugin"
+  }
+}

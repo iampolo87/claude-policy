@@ -1,0 +1,19 @@
+{
+  "session_id": "00000000-0000-4000-8000-0000000000a1",
+  "transcript_path": "/work/user/.claude/projects/-work-user-projects-claude-policy/00000000-0000-4000-8000-0000000000a1.jsonl",
+  "cwd": "/work/user/projects/claude-policy",
+  "scratchpad_dir": "/tmp/claude-1000/-work-user-projects-claude-policy/00000000-0000-4000-8000-0000000000a1/scratchpad",
+  "prompt_id": "00000000-0000-4000-8000-0000000000a3",
+  "permission_mode": "auto",
+  "effort": {
+    "level": "high"
+  },
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Agent",
+  "tool_input": {
+    "description": "Count lines in go.mod",
+    "prompt": "Run exactly one command: `wc -l go.mod`. Then reply with its output only.",
+    "subagent_type": "Explore"
+  },
+  "tool_use_id": "toolu_01Fixture000000000000004"
+}

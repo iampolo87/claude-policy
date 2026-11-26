@@ -1,0 +1,5 @@
+/claude-policy
+/dist/
+*.test
+/testdata/**/*.raw.json
+/.private-terms

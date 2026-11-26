@@ -1,0 +1,1 @@
+{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"destructive: hard_deny \"rm -rf /\": rm -rf \\\n/>/dev/null 2>&1"}}

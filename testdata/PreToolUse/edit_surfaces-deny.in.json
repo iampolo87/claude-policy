@@ -1,0 +1,1 @@
+{"session_id":"fixture-session","transcript_path":"{{TESTDATA}}/PreToolUse/edit_surfaces/sess1.jsonl","cwd":"{{TESTDATA}}","hook_event_name":"PreToolUse","permission_mode":"default","agent_id":"aaa111","agent_type":"general-purpose","tool_name":"Write","tool_input":{"file_path":"{{TESTDATA}}/../internal/rules/other.go","content":"x"},"tool_use_id":"toolu_01"}

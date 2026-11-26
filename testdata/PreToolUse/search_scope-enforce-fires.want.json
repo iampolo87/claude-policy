@@ -1,0 +1,1 @@
+{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"search_scope: vendor/ is gitignored and skipped by this grep; name it as a path (e.g. vendor) or use `command grep -r` to include it."}}

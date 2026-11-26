@@ -1,0 +1,1 @@
+{"session_id":"fixture-session","transcript_path":"/tmp/t.jsonl","cwd":"/tmp","hook_event_name":"PostToolUse","permission_mode":"default","tool_name":"Bash","tool_input":{"command":"ls"},"tool_response":{"stdout":"","exit_code":0},"tool_use_id":"toolu_01"}

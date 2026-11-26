@@ -1,0 +1,1 @@
+{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"sensitive_paths: subagents may not access /work/user/projects/claude-policy/.env (matches .env); ask the main agent"}}

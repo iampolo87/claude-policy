@@ -1,0 +1,59 @@
+# The profile the test suite runs against: the compiled-in defaults (every
+# rule in log mode, every integration off) plus what the fixtures exercise.
+# It also shows every optional key in use.
+
+[rules.destructive.fs]
+allow_roots = ["$scratchpad_dir", "/tmp/claude-1000"]
+# Build output a recursive rm may remove unasked, relative to the work tree.
+# [!.]: generated and pub/static keep a tracked .htaccess.
+regenerable = [
+  "var/cache", "var/cache/**", "var/page_cache", "var/page_cache/**",
+  "var/view_preprocessed", "var/view_preprocessed/**",
+  "generated/[!.]*", "generated/[!.]*/**", "pub/static/[!.]*", "pub/static/[!.]*/**",
+]
+
+[rules.edit_surfaces]
+always_allowed = ["$scratchpad_dir/**", "/tmp/claude-1000/**"]
+
+[rules.output_cap]
+exempt = ["mcp__chrome-devtools__take_screenshot", "mcp__browser-b__take_screenshot"]
+
+[rules.loop_guard]
+mode = "enforce"
+
+[rules.commit_message]
+mode = "enforce"
+
+[rules.explore_model]
+mode = "enforce"
+
+[rules.ponytail]
+mode = "enforce"
+level_file = "~/.claude/.ponytail-mode"
+
+[rules.lint]
+mode = "enforce"
+phpstan = true
+phpcs = true
+phpcs_standard = "PSR12"
+
+[rules.time_budget]
+mode = "enforce"
+
+[rules.session_notice]
+mode = "enforce"
+startup = "[NOTICE] Read CONTRIBUTING.md once before the first code edit."
+
+[rules.search_batch]
+mode = "enforce"
+
+[rules.pii_egress]
+mode = "enforce"
+
+[integrations.mempalace]
+mine = true
+projects_root = "/work/user/projects"
+
+[integrations.herdr]
+report = true
+notice = "[HERDR] Inside herdr (pane {pane}); prefer native subagents."

@@ -1,0 +1,1 @@
+{"session_id":"fixture-session","transcript_path":"/tmp/t.jsonl","cwd":"/tmp","hook_event_name":"PreToolUse","permission_mode":"default","tool_name":"Bash","tool_input":{"command":"git commit -m \"a\" -m \"b\" -m \"c\" -m \"d\""},"tool_use_id":"toolu_01"}

@@ -1,0 +1,1 @@
+{"session_id":"fixture-session","cwd":"/tmp","hook_event_name":"PreToolUse","permission_mode":"default","tool_name":"Task","tool_input":{"prompt":"p","subagent_type":"Explore"},"tool_use_id":"toolu_01"}

@@ -1,0 +1,1 @@
+{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"--no-verify is not allowed. Report the failing pre-commit hook to the user instead of bypassing it."}}

@@ -1,0 +1,1 @@
+{"session_id":"fixture-session","transcript_path":"/tmp/fixture-session.jsonl","cwd":"/work/user/projects/claude-policy","hook_event_name":"PreToolUse","permission_mode":"auto","agent_id":"a0000000000000001","agent_type":"Explore","tool_name":"Read","tool_input":{"file_path":"/work/user/projects/claude-policy/.env"},"tool_use_id":"toolu_01"}

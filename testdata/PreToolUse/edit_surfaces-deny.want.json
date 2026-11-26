@@ -1,0 +1,1 @@
+{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"edit_surfaces: internal/rules/other.go is outside this agent's ## Allowed edit surfaces: internal/rules/edit_surfaces.go, testdata/pretooluse/edit_surfaces-*"}}

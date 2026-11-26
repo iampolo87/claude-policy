@@ -1,0 +1,1 @@
+{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Ponytail gate: [debounce] debounce exists (lodash / 3-line native); don't reinvent. Override: add `ponytail-allow: <reason>` in the code, set PONYTAIL_OFF=1, or set ~/.claude/.ponytail-mode to off/lite."}}

@@ -1,0 +1,224 @@
+# claude-policy: every key with its compiled-in default.
+#
+# Copy to ~/.claude/policy.toml and change what you need; a key you leave out
+# keeps the default shown here, and a missing file means exactly this file.
+# The file is read on every hook call: no restart, no rebuild.
+#
+# A typo is an error, not a silent no-op: an unknown key or an invalid value
+# makes the whole file fall back to these defaults and prints the reason on
+# stderr. Check with `claude-policy config check`.
+#
+# mode is off | log | enforce.
+#   log      the rule runs and its decision is written to the decision log,
+#            but Claude Code never sees it
+#   enforce  the decision is logged and returned to Claude Code
+# A new install only observes: every rule below starts in log.
+
+[global]
+mode = "log" # for a rule whose own mode is ""
+
+[metrics] # one line per hook call in ~/.claude/state/policy/metrics.jsonl
+mode = "on" # on | off
+keep = 4 # rotated generations kept
+max_bytes = 10485760
+
+# ---------------------------------------------------------------------------
+# destructive: PreToolUse Bash (and writes to a policy.toml). The command is
+# parsed, not substring-matched. Each category answers allow | ask | deny,
+# separately for the main agent and for subagents.
+[rules.destructive]
+mode = "log"
+# Denied for every agent in every mode except off, log included.
+hard_deny = ["rm -rf /", "rm -rf ~", "--no-preserve-root", "mkfs"]
+
+[rules.destructive.git] # push --force, reset --hard, clean -f, checkout -- ., branch -D, stash drop, ...
+main = "ask"
+subagent = "deny"
+# Subcommands the main agent runs unasked: push reset restore clean rebase
+# checkout branch stash. A rebase with -x/-i/-c still asks.
+allow_actions = []
+# Branches a push may not reach, and no other local branch may take as its
+# upstream, unasked. Never exempted by allow_actions.
+protected_refs = ["main", "master", "production", "staging"]
+
+[rules.destructive.fs] # rm -r outside allow_roots, chmod/chown -R /, dd of=/dev, ...
+main = "ask"
+subagent = "deny"
+# Default: the session scratchpad and Claude Code's per-user temp root.
+# allow_roots = ["$scratchpad_dir", "/tmp/claude-<your uid>"]
+# Build output a recursive rm may remove unasked: doublestar globs relative to
+# the nearest enclosing work tree. Empty by default; a Magento checkout might use
+# ["var/cache/**", "var/page_cache/**", "generated/[!.]*/**", "pub/static/[!.]*/**"].
+regenerable = []
+
+[rules.destructive.sql] # DROP / TRUNCATE / DELETE FROM through mysql, mariadb, psql (-e, heredoc, < file)
+main = "ask"
+subagent = "deny"
+
+[rules.destructive.magento] # bin/magento subcommands matching globs
+main = "ask"
+subagent = "deny"
+globs = ["setup:uninstall", "module:uninstall", "setup:db:*clean*", "indexer:reset"]
+
+# ---------------------------------------------------------------------------
+# sensitive_paths: subagents may not read or write these (file tools, Grep,
+# every Bash word). The main agent is never checked: what no agent may read
+# belongs in settings.json permissions.deny.
+[rules.sensitive_paths]
+mode = "log"
+paths = [".env", "app/etc/env.php", "auth.json"]
+
+# edit_surfaces: a subagent whose brief has this heading may only edit the
+# paths listed under it.
+[rules.edit_surfaces]
+mode = "log"
+heading = "## Allowed edit surfaces"
+missing = "allow" # allow | deny when the brief has no such heading
+# always_allowed = ["$scratchpad_dir/**", "/tmp/claude-<your uid>/**"]
+
+# risk_line: a turn that edited code should end with a line matching pattern.
+# The reminder is injected at the turn's first code edit; a Stop without the
+# line is logged, never blocked.
+[rules.risk_line]
+mode = "log"
+pattern = '(?m)^Risk: (none|item [1-6])'
+reminder = "risk_line: this turn edits code. End the final message with a line `Risk: none` or `Risk: item N (reason)`, N being one of: 1 irreversible data effects, 2 security, 3 consumed contracts, 4 concurrency, 5 delivery or environment, 6 no test would catch a regression."
+skip = ["$scratchpad_dir", "~/.claude/plans"] # edits below these need no line
+docs = ["**/*.md", "**/*.txt"] # nor do edits matching these ...
+docs_except = [ # ... unless they also match one of these
+  "**/CLAUDE*.md", "**/AGENTS*.md", "**/GEMINI*.md", "**/SKILL.md", "**/.claude/**", "**/.github/**",
+  "**/.cursor/**", "**/requirements*.txt", "**/requirements/**", "**/CMakeLists.txt", "**/robots.txt",
+]
+
+# output_cap: an oversized Bash or MCP result is replaced by head + pointer +
+# tail, the full text spilled under the session scratchpad.
+[rules.output_cap]
+mode = "log"
+bash_chars = 8000 # 1000..9000
+mcp_chars = 8000
+read = "log" # a mode of its own; enforce caps Reads of read_paths only
+read_paths = ["~/.claude/projects/*/*/tool-results/**", "/tmp/claude-*/*/*/scratchpad/**"]
+exempt = ["mcp__chrome-devtools__take_screenshot"] # tool names never capped
+
+# loop_guard: the same failing command again, or a run of failures.
+[rules.loop_guard]
+mode = "log"
+fail_threshold = 2
+ttl_seconds = 1800
+streak_threshold = 4
+
+# commit_message: git commit with more than max_lines non-empty lines, or
+# containing one of deny (case-insensitive).
+[rules.commit_message]
+mode = "log"
+max_lines = 3
+deny = ["co-authored-by", "generated with", "noreply@anthropic.com", "claude.com/claude-code", "claude-session:", "claude.ai/code/session", "🤖", "--no-verify"]
+
+# explore_model: an Explore subagent spawned without a model gets this one.
+[rules.explore_model]
+mode = "log"
+default_model = "haiku"
+
+# ponytail: deny new code that reinvents something the platform already has.
+# `ponytail-allow: <reason>` in the code, or PONYTAIL_OFF=1, lets it through.
+[rules.ponytail]
+mode = "log"
+level_file = "" # optional: a file holding off | lite | full | ultra, e.g. "~/.claude/.ponytail-mode"
+
+[[rules.ponytail.signatures]]
+label = "debounce"
+regex = '\b(function\s+debounce|const\s+debounce\s*=)'
+hint = "debounce exists (lodash / 3-line native); don't reinvent"
+
+[[rules.ponytail.signatures]]
+label = "throttle"
+regex = '\b(function\s+throttle|const\s+throttle\s*=)'
+hint = "throttle exists (lodash); don't reinvent"
+
+[[rules.ponytail.signatures]]
+label = "uuid-mathrandom"
+regex = 'Math\.random\(\)\.toString\('
+hint = "use crypto.randomUUID() (native), not Math.random() ids"
+
+[[rules.ponytail.signatures]]
+label = "email-regex"
+regex = '\[\^@\]\+@'
+hint = "email validation: use a vetted validator / input[type=email], not a hand regex"
+
+[[rules.ponytail.signatures]]
+label = "php-polyfill"
+regex = 'function\s+(str_contains|str_starts_with|str_ends_with|array_is_list)\s*\('
+hint = "PHP 8+ has this natively; drop the polyfill"
+
+[[rules.ponytail.signatures]]
+label = "php-uuid"
+regex = 'function\s+\w*[Uu]uid\w*\s*\('
+hint = "PHP uuid: prefer ramsey/uuid or a random_bytes helper if already present"
+
+# lint: after an edit, `php -l` / `node --check` on the file; a syntax error
+# blocks. phpstan and phpcs run from the project's vendor/bin and only inform.
+[rules.lint]
+mode = "log"
+php = true
+node = true
+phpstan = false
+phpcs = false
+phpcs_standard = "" # passed as --standard; "" leaves it to the project's ruleset
+
+# time_budget: `budget:20m` in a prompt starts an advisory clock.
+[rules.time_budget]
+mode = "log"
+
+# session_notice: context added at SessionStart.
+[rules.session_notice]
+mode = "log"
+cold_resume_usd_warn = 0.5 # warn when a resume re-writes at least this much cache
+startup = "" # a line of your own on every SessionStart
+post_compact = "[POST-COMPACT] Summary is lossy. Before editing: reconcile git state and checks, then restate the task in ≤10 bullets."
+
+# checkpoint: edited files, last prompts and commands, git status, written at
+# PreCompact and injected again after the compaction.
+[rules.checkpoint]
+mode = "log"
+
+# search_scope: a recursive grep / rg / git grep silently skips these when
+# they are gitignored; say so next to the result.
+[rules.search_scope]
+mode = "log"
+dirs = ["vendor"]
+
+# search_batch: nudge an agent that sends lookups one per message.
+[rules.search_batch]
+mode = "log"
+threshold = 4
+
+# pii_egress: ask before a Bash, Monitor, WebFetch or WebSearch call carries
+# the Claude account email, or one of needles (5..256 chars, at most 32).
+[rules.pii_egress]
+mode = "log"
+needles = []
+
+# ---------------------------------------------------------------------------
+# Integrations with tools outside Claude Code. All off: nothing below runs,
+# and nothing outside Claude Code is contacted, until you turn it on here.
+
+[integrations.claude_mem]
+# GET <url>?cwd=<cwd> at PreCompact; the plain-text body becomes the
+# checkpoint's "Work state" section. e.g. "http://127.0.0.1:<port>/api/work-state"
+work_state_url = ""
+
+[integrations.mempalace]
+# `claude-policy mine` as an async PreCompact hook runs
+# `<bin> mine <transcript> --mode convos --wing <wing> ...`.
+mine = false
+bin = "mempalace"
+# The directory your projects live under, e.g. "~/projects". The wing is the
+# project's path below it; a session started elsewhere is skipped. Absolute or ~.
+projects_root = ""
+
+[integrations.herdr]
+# `claude-policy statusline <renderer>` reports model, effort, context and
+# cost to the herdr pane it runs in.
+report = false
+# A line added at SessionStart inside a pane; "{pane}" is the pane id.
+notice = ""

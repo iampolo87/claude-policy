@@ -1,0 +1,1 @@
+{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"[NOTICE] Read CONTRIBUTING.md once before the first code edit.\n[COLD-RESUME] Prompt cache likely expired: this resume re-writes ~150000 tokens at cache-write price (est. $0.75). If little work remains, /clear and restart with a narrow brief."}}

@@ -1,0 +1,26 @@
+{
+  "session_id": "00000000-0000-4000-8000-0000000000a1",
+  "transcript_path": "/work/user/.claude/projects/-work-user-projects-claude-policy/00000000-0000-4000-8000-0000000000a1.jsonl",
+  "cwd": "/work/user/projects/claude-policy",
+  "scratchpad_dir": "/tmp/claude-1000/-work-user-projects-claude-policy/00000000-0000-4000-8000-0000000000a1/scratchpad",
+  "prompt_id": "00000000-0000-4000-8000-0000000000a3",
+  "permission_mode": "auto",
+  "agent_id": "a0000000000000001",
+  "agent_type": "Explore",
+  "effort": {
+    "level": "medium"
+  },
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_transcript_path": "/work/user/.claude/projects/-work-user-projects-claude-policy/00000000-0000-4000-8000-0000000000a1/subagents/agent-a0000000000000001.jsonl",
+  "background_tasks": [
+    {
+      "id": "a0000000000000001",
+      "type": "subagent",
+      "status": "running",
+      "description": "Count lines in go.mod",
+      "agent_type": "Explore"
+    }
+  ],
+  "session_crons": []
+}

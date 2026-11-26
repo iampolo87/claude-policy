@@ -1,0 +1,1 @@
+{"hook_event_name": "PostToolUse", "session_id": "fx", "cwd": "/proj", "tool_use_id": "toolu_fx", "scratchpad_dir": "/tmp/none", "tool_name": "Bash", "tool_input": {}, "tool_response": {"stdout": "ok", "stderr": "", "interrupted": false, "isImage": false}}

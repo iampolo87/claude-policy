@@ -1,0 +1,1 @@
+{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"Time budget for this task: 1200s. Elapsed time is appended after each tool result as `elapsed Xs / 1200s`. Pace the work to finish inside it; run independent units in parallel rather than in sequence."}}

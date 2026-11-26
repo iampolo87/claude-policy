@@ -1,0 +1,10 @@
+{
+  "session_id": "00000000-0000-4000-8000-0000000000a1",
+  "transcript_path": "/work/user/.claude/projects/-work-user-projects-claude-policy/00000000-0000-4000-8000-0000000000a1.jsonl",
+  "cwd": "/work/user/projects/claude-policy",
+  "scratchpad_dir": "/tmp/claude-1000/-work-user-projects-claude-policy/00000000-0000-4000-8000-0000000000a1/scratchpad",
+  "prompt_id": "00000000-0000-4000-8000-0000000000a3",
+  "permission_mode": "auto",
+  "hook_event_name": "UserPromptSubmit",
+  "prompt": "budget:20m sample prompt"
+}

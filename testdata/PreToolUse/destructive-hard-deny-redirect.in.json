@@ -1,0 +1,1 @@
+{"session_id":"00000000-0000-4000-8000-0000000000a1","transcript_path":"/tmp/t.jsonl","cwd":"/work/user/projects/claude-policy","scratchpad_dir":"/tmp/claude-1000/x/scratchpad","permission_mode":"auto","hook_event_name":"PreToolUse","tool_name":"Bash","tool_input":{"command":"rm -rf \\\n/>/dev/null 2>&1","description":"Remove everything"},"tool_use_id":"toolu_01"}

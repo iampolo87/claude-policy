@@ -1,0 +1,21 @@
+{
+  "session_id": "00000000-0000-4000-8000-0000000000a1",
+  "transcript_path": "/work/user/.claude/projects/-work-user-projects-claude-policy/00000000-0000-4000-8000-0000000000a1.jsonl",
+  "cwd": "/work/user/projects/claude-policy",
+  "scratchpad_dir": "/tmp/claude-1000/-work-user-projects-claude-policy/00000000-0000-4000-8000-0000000000a1/scratchpad",
+  "prompt_id": "00000000-0000-4000-8000-0000000000a3",
+  "permission_mode": "auto",
+  "effort": {
+    "level": "high"
+  },
+  "hook_event_name": "PostToolUseFailure",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "echo FIXTURE_FAILURE; false",
+    "description": "Fail on purpose"
+  },
+  "tool_use_id": "toolu_01Fixture000000000000008",
+  "error": "Exit code 1\nFIXTURE_FAILURE",
+  "is_interrupt": false,
+  "duration_ms": 10
+}

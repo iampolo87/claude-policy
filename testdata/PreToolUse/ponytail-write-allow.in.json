@@ -1,0 +1,1 @@
+{"session_id":"fixture-session","transcript_path":"/tmp/t.jsonl","cwd":"/tmp","hook_event_name":"PreToolUse","permission_mode":"default","tool_name":"Write","tool_input":{"file_path":"/tmp/a.js","content":"// ponytail-allow: vendored\nfunction debounce(fn){}"},"tool_use_id":"t3"}
