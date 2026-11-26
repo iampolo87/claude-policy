@@ -26,6 +26,8 @@ const (
 	lgStreakSuffix = ".loopstreak"
 )
 
+var lgEditTools = []string{"Edit", "Write", "NotebookEdit"}
+
 var (
 	lgRtk = regexp.MustCompile(`^rtk\s+`)
 	lgWS  = regexp.MustCompile(`\s+`)
@@ -124,8 +126,14 @@ func (loopGuard) Apply(ctx context.Context, in *hook.Input, cfg *config.Config, 
 		return nil // a user interrupt is not a tool failure
 	}
 	failed := in.HookEventName == "PostToolUseFailure" || lgIsFail(in.ToolResponse)
-	if in.ToolName == "Bash" {
+	switch {
+	case in.ToolName == "Bash":
 		lgRecord(in, failed, ttl, now, st)
+	case !failed && slices.Contains(lgEditTools, in.ToolName):
+		// A file changed, so rerunning a failed command is the red-green loop,
+		// not a verbatim retry. ponytail: clears every command's failures, and
+		// an edit made through Bash (sed -i, a heredoc) clears nothing.
+		st.Update(lgFails, func([]byte) []byte { return []byte("[]") })
 	}
 	var streak int
 	st.Update(st.Agent+lgStreakSuffix, func(old []byte) []byte {

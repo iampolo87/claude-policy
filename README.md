@@ -231,6 +231,11 @@ While `destructive` is in `enforce`, an agent's write to any file named
   State is kept per session, counters per agent.
 - **`output_cap`** keeps 30 % head and 70 % tail and stays under Claude Code's
   own 10k-character hook-value spill, so a result is never spilled twice.
+  A call made by a REPL script (tool-use id `repl_…`) is not capped: its
+  result goes to the script, not to the model.
+- **`loop_guard`** forgets recorded command failures after a successful
+  `Edit`, `Write` or `NotebookEdit`, so rerunning a failing test after a code
+  change is not a retry. An edit made through Bash does not count.
 - **`edit_surfaces`** reads the subagent's brief from line 0 of its transcript.
   An unreadable brief allows and logs; a heading that names no path denies.
 - **`risk_line`** never blocks a Stop.

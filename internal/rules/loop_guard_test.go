@@ -268,3 +268,29 @@ func TestLoopGuardScopedByCwd(t *testing.T) {
 		t.Fatalf("absent-cwd failures must not deny /C: %+v", d)
 	}
 }
+
+// A red-green loop reruns the same test command after every edit: once a file
+// changed, the rerun is no longer a verbatim retry.
+func TestLoopGuardEditClearsFailures(t *testing.T) {
+	pre := func(st *state.Store) *hook.Decision {
+		return lgApply(st, lgIn("PreToolUse", "Bash", "c", "make test"))
+	}
+	for _, tool := range []string{"Edit", "Write", "NotebookEdit"} {
+		st := state.New(t.TempDir(), "s", "")
+		lgFail(st, "a", "make test", "make test")
+		lgFail(st, "b", "make test", "make test")
+		lgApply(st, &hook.Input{HookEventName: "PostToolUse", ToolName: tool, ToolUseID: "e"})
+		if d := pre(st); d != nil {
+			t.Fatalf("%s: got %+v", tool, d)
+		}
+	}
+	// a failed edit changed nothing, and a Read is not an edit
+	st := state.New(t.TempDir(), "s", "")
+	lgFail(st, "a", "make test", "make test")
+	lgFail(st, "b", "make test", "make test")
+	lgApply(st, &hook.Input{HookEventName: "PostToolUseFailure", ToolName: "Edit", ToolUseID: "e", Error: "String to replace not found"})
+	lgApply(st, &hook.Input{HookEventName: "PostToolUse", ToolName: "Read", ToolUseID: "r"})
+	if d := pre(st); d == nil || d.Permission != "deny" {
+		t.Fatalf("want deny, got %+v", d)
+	}
+}

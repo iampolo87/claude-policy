@@ -482,3 +482,18 @@ func TestOutputCapReadPaths(t *testing.T) {
 		t.Fatalf("mode=log %+v", d)
 	}
 }
+
+// A call dispatched by a REPL script returns to the script (the model's copy
+// of the result is empty), so a cap would only corrupt what the script reads.
+func TestOutputCapSkipsScriptCalls(t *testing.T) {
+	t.Setenv("BASH_MAX_OUTPUT_LENGTH", "200001")
+	dir := t.TempDir()
+	in := ocIn("Bash", ocBashResp(strings.Repeat("a", 100000), ""), dir)
+	in.ToolUseID = "repl_00000000-0000-4000-8000-000000000001"
+	if d := ocApply(in, "enforce"); d != nil {
+		t.Fatalf("got %+v", d)
+	}
+	if _, err := os.Stat(filepath.Join(dir, "policy-spill")); err == nil {
+		t.Fatal("spilled a script call's output")
+	}
+}

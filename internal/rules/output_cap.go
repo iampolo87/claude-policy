@@ -123,7 +123,9 @@ func ocSpill(in *hook.Input, full string) (string, bool) {
 
 func (outputCap) Apply(ctx context.Context, in *hook.Input, cfg *config.Config, st *state.Store) *hook.Decision {
 	oc := cfg.Rules.OutputCap
-	if ctx.Err() != nil || slices.Contains(oc.Exempt, in.ToolName) {
+	// A REPL script's own calls (tool_use_id "repl_…", CC 2.1.332) return to the
+	// script and reach the model empty: a cap would only corrupt its input.
+	if ctx.Err() != nil || slices.Contains(oc.Exempt, in.ToolName) || strings.HasPrefix(in.ToolUseID, "repl_") {
 		return nil
 	}
 	switch {
